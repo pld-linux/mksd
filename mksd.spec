@@ -8,7 +8,7 @@ Summary(pl):	Demon dla mks - antywirusowe narzêdzie dla Uniksów
 Name:		mksd
 Version:	1.15.2
 Release:	3
-License:	This program will be for free till the end of year 2003 (see licencja.txt)
+License:	It's free, but requires ads of mks.com.pl on your WWW (see licencja.txt)
 Group:		Applications
 Source0:	http://download.mks.com.pl/download/linux/mksdLinux-%{version}.tgz
 # Source0-md5:	d7094273de4df897a4e69f6c6f43244c
