@@ -1,8 +1,14 @@
+# TODO:
+#   - make two virus db sources providing mks-virdb-source
+#       - cron update
+#       - static db (built with package)
+#   - make cron run db udpate hourly ?
+
 Summary:	Daemon for mks-anti-virus utility for Unix
 Summary(pl):	Demon dla mks - antywirusowe narzêdzie dla Unixów
 Name:		mksd
 Version:	1.14
-Release:	3
+Release:	5
 License:	This program will be for free till the end of year 2003 (see licencja.txt)
 Group:		Applications
 Source0:	http://download.mks.com.pl/download/linux/mksdLinux-%{version}.2.tgz
@@ -68,7 +74,7 @@ install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/mksd
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/mksd
 install *.h $RPM_BUILD_ROOT%{_includedir}/libmksd.h
 install *.a $RPM_BUILD_ROOT%{_libdir}
-install mksd mkschk mkschkin mksfiltr $RPM_BUILD_ROOT%{_bindir}
+install mksd mkschk mkschkin mksfiltr mksscan $RPM_BUILD_ROOT%{_bindir}
 install inne/mks* $RPM_BUILD_ROOT%{_bindir}
 
 %clean
@@ -160,7 +166,7 @@ fi
 
 %files clients
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/mks[cfw]*
+%attr(755,root,root) %{_bindir}/mks[cfsw]*
 %doc inne/*
 
 %files devel
