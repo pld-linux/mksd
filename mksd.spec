@@ -1,11 +1,11 @@
 Summary:	Daemon for mks-anti-virus utility for Unix
 Summary(pl):	Demon dla mks - antywirusowe narzêdzie dla Unixów
 Name:		mksd
-Version:	1.07
+Version:	1.08
 Release:	1
 License:	distributable
 Group:		Applications
-Source0:	http://download.mks.com.pl/files/%{name}-1-07.tgz
+Source0:	http://download.mks.com.pl/download/linux/%{name}-%{version}.tar.bz2
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://linux.mks.com.pl/
