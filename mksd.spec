@@ -1,7 +1,7 @@
 Summary:	Daemon for mks-anti-virus utility for Unix
 Summary(pl):	Demon dla mks - antywirusowe narzêdzie dla Unixów
 Name:		mksd
-Version:	1.10
+Version:	1.12
 Release:	1
 License:	distributable
 Group:		Applications
@@ -55,19 +55,19 @@ klienckich mksd.
 %setup -q
 
 %build
-cd src
+tar xf inne/src.tar
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/{rc.d/init.d,sysconfig},/var/run/mksd}
+install -d $RPM_BUILD_ROOT{%{_bindir},/var/run/mksd}
 
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/mksd
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/mksd
-install -D src/*.h $RPM_BUILD_ROOT%{_includedir}/libmksd.h
-install -D src/*.a $RPM_BUILD_ROOT%{_libdir}/libmksd.a
-install -D src/mkschk $RPM_BUILD_ROOT%{_bindir}/mkschk
-install mksd mkschkdir mkschkdir-syncr mkschkin mksfiltr $RPM_BUILD_ROOT%{_bindir}/
+install -D %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/mksd
+install -D %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/mksd
+install -D *.h $RPM_BUILD_ROOT%{_includedir}/libmksd.h
+install -D *.a $RPM_BUILD_ROOT%{_libdir}/libmksd.a
+install mksd mkschk mkschkin mksfiltr $RPM_BUILD_ROOT%{_bindir}/
+install inne/mks* $RPM_BUILD_ROOT%{_bindir}/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -102,7 +102,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc README LICENCJA
+%doc README LICENCJA CONOWEGO
 %attr(755,root,root) %{_bindir}/mksd
 %attr(754,root,root) /etc/rc.d/init.d/mksd
 %attr(640,root,root) %config(noreplace) %verify(not md5 size mtime) /etc/sysconfig/mksd
