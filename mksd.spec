@@ -9,6 +9,13 @@ Source0:	http://download.mks.com.pl/files/%{name}-1-07.tgz
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://linux.mks.com.pl/
+PreReq:		rc-scripts
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/bin/id
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
+Requires(postun):	/usr/sbin/userdel
+Requires(postun):	/usr/sbin/groupdel
 Requires:	mks
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -61,34 +68,35 @@ install -D src/*.h $RPM_BUILD_ROOT%{_includedir}/libmksd.h
 install -D src/*.a $RPM_BUILD_ROOT%{_libdir}/libmksd.a
 install -D src/mkschk $RPM_BUILD_ROOT%{_bindir}/mkschk
 install mksd mkschkdir mkschkdir-syncr mkschkin mksfiltr mkswatch $RPM_BUILD_ROOT%{_bindir}/
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %pre
 if [ -n "`getgid mksd`" ]; then
         if [ "`getgid mksd`" != "44" ]; then
-                echo "Warning: group mksd doesn't have gid=44. Correct this before installing mksd" 1>&2
+                echo "Error: group mksd doesn't have gid=44. Correct this before installing mksd." 1>&2
                 exit 1
         fi
 else
-	echo "adding group mksd GID=44"
+	echo "adding group mksd GID=44."
         /usr/sbin/groupadd -g 44 -r -f mksd
 fi
 if [ -n "`id -u mksd 2>/dev/null`" ]; then
 	if [ "`id -u mksd`" != "44" ]; then
-		echo "Warning: user mksd doesn't have uid=44. Correct this before installing mksd" 1>&2
+		echo "Error: user mksd doesn't have uid=44. Correct this before installing mksd." 1>&2
 		exit 1
 	fi
 else
-	echo "Adding user mksd UID=44"
-	/usr/sbin/useradd -u 44 -r -d /tmp  -s /bin/false -c "MKSD Anti Virus Checker" -g mksd mksd 1>&2
+	echo "Adding user mksd UID=44."
+	/usr/sbin/useradd -u 44 -r -d /tmp -s /bin/false -c "MKSD Anti Virus Checker" -g mksd mksd 1>&2
 fi
 
 %postun
 if [ "$1" = "0" ]; then
-	echo "Removing user mksd"
+	echo "Removing user mksd."
 	/usr/sbin/userdel mksd
-	echo "Removing group mksd"
+	echo "Removing group mksd."
 	/usr/sbin/groupdel mksd
 fi
 
