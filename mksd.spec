@@ -6,6 +6,7 @@ Release:	1
 License:	distributable
 Group:		Applications
 Source0:	http://download.mks.com.pl/download/linux/mksdLinux-%{version}.tgz
+# Source0-md5:	3c0e356c8f191eda3ad76c9bde6ce2e4
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://linux.mks.com.pl/
