@@ -74,6 +74,31 @@ install inne/mks* $RPM_BUILD_ROOT%{_bindir}
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%triggerin -- amavis-ng
+AMAVIS=$(/usr/bin/getgid amavis)
+RESULT=$?
+if  [ $RESULT -eq 0 ]; then
+	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
+	echo "adding mksd to amavis group GID=$AMAVIS"
+fi	
+
+%triggerin -- amavisd-new
+
+AMAVIS=$(/usr/bin/getgid amavis)
+RESULT=$?
+if  [ $RESULT -eq 0 ]; then
+	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
+	echo "adding mksd to amavis group GID=$AMAVIS"
+fi	
+
+%triggerin -- amavisd
+AMAVIS=$(/usr/bin/getgid amavis)
+RESULT=$?
+if  [ $RESULT -eq 0 ]; then
+	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
+	echo "adding mksd to amavis group GID=$AMAVIS"
+fi
+
 %pre
 if [ -n "`getgid mksd`" ]; then
         if [ "`getgid mksd`" != "44" ]; then
