@@ -29,10 +29,11 @@ case "$1" in
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/mksd		
 	else
 		msg_already_running mksd
+		exit 1
 	fi
 	;;
   stop)
-        if [ -f /var/lock/subsys/mksd ]; then
+	if [ -f /var/lock/subsys/mksd ]; then
 		msg_stopping mksd
 		killproc mksd
 		rm -f /var/run/mksd.pid /var/lock/subsys/mksd >/dev/null 2>&1
@@ -51,10 +52,13 @@ case "$1" in
 	;;
   reload)
 	msg_reloading mksd
+	busy
 	killproc mksd -HUP
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && ok || died
 	;;
   *)
-	msg_usage "$0 {start|stop|init|status|restart|reload}"
+	msg_usage "$0 {start|stop|restart|reload|status}"
 	exit 1
 esac
 
