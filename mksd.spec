@@ -80,7 +80,7 @@ RESULT=$?
 if  [ $RESULT -eq 0 ]; then
 	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
 	echo "adding mksd to amavis group GID=$AMAVIS"
-fi	
+fi
 
 %triggerin -- amavisd-new
 
@@ -89,7 +89,7 @@ RESULT=$?
 if  [ $RESULT -eq 0 ]; then
 	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
 	echo "adding mksd to amavis group GID=$AMAVIS"
-fi	
+fi
 
 %triggerin -- amavisd
 AMAVIS=$(/usr/bin/getgid amavis)
