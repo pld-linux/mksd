@@ -1,0 +1,9 @@
+# Customized setings
+
+# Define nice level
+SERVICE_RUN_NICE_LEVEL="+0"
+
+#MKSD mode: scan or cure
+MKSD_MODE="scan"
+
+MKSD_PROCESS=1
