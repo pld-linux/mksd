@@ -5,7 +5,7 @@
 #   - make cron run db udpate hourly ?
 
 Summary:	Daemon for mks-anti-virus utility for Unix
-Summary(pl):	Demon dla mks - antywirusowe narzêdzie dla Unixów
+Summary(pl):	Demon dla mks - antywirusowe narzêdzie dla Uniksów
 Name:		mksd
 Version:	1.15.2
 Release:	2
@@ -25,7 +25,7 @@ Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
 Requires:	mks
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-ExclusiveArch:  %{ix86}
+ExclusiveArch:	%{ix86}
 
 %description
 MKSD Antivirus is anti-virus scanner for Unix.
@@ -35,29 +35,29 @@ MKSD jest demonem dla Linuksa przyspieszaj±cym skanowanie poczty przy
 korzystaniu z mks.
 
 %package clients
-Summary:	MKSD System Clients
+Summary:	MKSD system clients
 Summary(pl):	Aplikacje klienckie dla MKSD
 Group:		Applications
 Requires:	%{name} = %{version}
 
 %description clients
-MKSD System Clients.
+MKSD system clients.
 
 %description clients -l pl
 Aplikacje klienckie dla MKSD.
 
 %package devel
-Summary:	mksd - Development header files and libraries
-Summary(pl):	mksd - Pliki nag³ówkowe i biblioteki dla programistów
+Summary:	MKSD - development header files and libraries
+Summary(pl):	MKSD - pliki nag³ówkowe i biblioteki dla programistów
 Group:		Development/Libraries
 
 %description devel
 This package contains the development header files and libraries
-necessary to develop mksd client applications.
+necessary to develop MKSD client applications.
 
 %description devel -l pl
 Pliki nag³ówkowe i biblioteki konieczne do kompilacji aplikacji
-klienckich mksd.
+klienckich MKSD.
 
 %prep
 %setup -q
@@ -84,7 +84,7 @@ rm -rf $RPM_BUILD_ROOT
 %triggerin -- amavis-ng
 AMAVIS=$(/usr/bin/getgid amavis)
 RESULT=$?
-if  [ $RESULT -eq 0 ]; then
+if [ $RESULT -eq 0 ]; then
 	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
 	echo "adding mksd to amavis group GID=$AMAVIS"
 fi
@@ -93,7 +93,7 @@ fi
 
 AMAVIS=$(/usr/bin/getgid amavis)
 RESULT=$?
-if  [ $RESULT -eq 0 ]; then
+if [ $RESULT -eq 0 ]; then
 	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
 	echo "adding mksd to amavis group GID=$AMAVIS"
 fi
@@ -101,7 +101,7 @@ fi
 %triggerin -- amavisd
 AMAVIS=$(/usr/bin/getgid amavis)
 RESULT=$?
-if  [ $RESULT -eq 0 ]; then
+if [ $RESULT -eq 0 ]; then
 	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
 	echo "adding mksd to amavis group GID=$AMAVIS"
 fi
@@ -126,7 +126,7 @@ else
 	/usr/sbin/useradd -u 44 -r -d /tmp -s /bin/false -c "Mksd Anti Virus Checker" -g mksd mksd 1>&2
 	AMAVIS=$(/usr/bin/getgid amavis)
 	RESULT=$?
-	if  [ $RESULT -eq 0 ]; then
+	if [ $RESULT -eq 0 ]; then
 		/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
 		echo "adding to amavis group GID=$AMAVIS"
 	fi
