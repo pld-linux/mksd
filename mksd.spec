@@ -125,8 +125,8 @@ if [ -n "`/bin/id -u mksd 2>/dev/null`" ]; then
 		exit 1
 	fi
 else
-	AMAVIS=$(/usr/bin/getgid amavis)
 	GROUPS=
+	AMAVIS=$(/usr/bin/getgid amavis)
 	if [ $? -eq 0 ]; then
 		GROUPS="-G amavis"
 	fi
