@@ -61,8 +61,8 @@ tar xf inne/src.tar
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir},%{_includedir}} \
-	{/var/run/mksd,/etc/{rc.d/init.d,sysconfig}}
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir},%{_includedir},\
+/var/run/mksd,/etc/{rc.d/init.d,sysconfig}}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/mksd
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/mksd
@@ -90,9 +90,12 @@ if [ -n "`id -u mksd 2>/dev/null`" ]; then
                exit 1
        fi
 else
-       echo "Adding user mksd UID=44 and adding to amavis group."
-       /usr/sbin/useradd -u 44 -G amavis -r -d /tmp -s /bin/false -c "MKSD Anti Virus Checker" -g mksd mksd 1>&2
+       echo "Adding user mksd UID=44 and adding to amavis group (if exists)."
+       /usr/sbin/useradd -u 44 -r -d /tmp -s /bin/false -c "MKSD Anti Virus Checker" -g mksd mksd 1>&2
+       /bin/grep amavis /etc/group
+       [ $? -eq 0 ] &&	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
 fi
+
 
 %postun
 if [ "$1" = "0" ]; then
