@@ -2,7 +2,7 @@ Summary:	Daemon for mks-anti-virus utility for Unix
 Summary(pl):	Demon dla mks - antywirusowe narzêdzie dla Unixów
 Name:		mksd
 Version:	1.14
-Release:	1
+Release:	2
 License:	distributable
 Group:		Applications
 Source0:	http://download.mks.com.pl/download/linux/mksdLinux-%{version}.2.tgz
@@ -89,8 +89,8 @@ if [ -n "`id -u mksd 2>/dev/null`" ]; then
                exit 1
        fi
 else
-       echo "Adding user mksd UID=44."
-       /usr/sbin/useradd -u 44 -r -d /tmp -s /bin/false -c "MKSD Anti Virus Checker" -g mksd mksd 1>&2
+       echo "Adding user mksd UID=44 and adding to amavis group."
+       /usr/sbin/useradd -u 44 -G amavis -r -d /tmp -s /bin/false -c "MKSD Anti Virus Checker" -g mksd mksd 1>&2
 fi
 
 %postun
@@ -100,6 +100,23 @@ if [ "$1" = "0" ]; then
        echo "Removing group mksd."
        /usr/sbin/groupdel mksd
 fi
+
+%post
+/sbin/chkconfig --add mksd
+if [ -f /var/lock/subsys/mksd ]; then
+        /etc/rc.d/init.d/mksd restart >&2
+else
+        echo "Run \"/etc/rc.d/init.d/mksd start\" to start Mksd for Linux daemon."
+fi
+
+%preun
+if [ "$1" = "0" ];then
+        if [ -f /var/lock/subsys/mksd ]; then
+                /etc/rc.d/init.d/mksd stop >&2
+        fi
+        /sbin/chkconfig --del mksd
+fi
+
 
 %files
 %defattr(644,root,root,755)
