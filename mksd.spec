@@ -1,11 +1,11 @@
 Summary:	Daemon for mks-anti-virus utility for Unix
 Summary(pl):	Demon dla mks - antywirusowe narzêdzie dla Unixów
 Name:		mksd
-Version:	1.08
+Version:	1.09
 Release:	1
 License:	distributable
 Group:		Applications
-Source0:	http://download.mks.com.pl/download/linux/%{name}-%{version}.tar.bz2
+Source0:	http://download.mks.com.pl/download/linux/mksd-Linux-%{version}.tgz
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://linux.mks.com.pl/
@@ -67,7 +67,7 @@ install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/mksd
 install -D src/*.h $RPM_BUILD_ROOT%{_includedir}/libmksd.h
 install -D src/*.a $RPM_BUILD_ROOT%{_libdir}/libmksd.a
 install -D src/mkschk $RPM_BUILD_ROOT%{_bindir}/mkschk
-install mksd mkschkdir mkschkdir-syncr mkschkin mksfiltr mkswatch $RPM_BUILD_ROOT%{_bindir}/
+install mksd mkschkdir mkschkdir-syncr mkschkin mksfiltr $RPM_BUILD_ROOT%{_bindir}/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -106,11 +106,12 @@ fi
 %attr(755,root,root) %{_bindir}/mksd
 %attr(754,root,root) %{_sysconfdir}/rc.d/init.d/mksd
 %attr(640,root,root) %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/sysconfig/mksd
-%attr(750,mksd,mksd) /var/run/mksd
+%attr(755,mksd,mksd) /var/run/mksd
 
 %files clients
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mks[cfw]*
+%doc inne/*
 
 %files devel
 %defattr(644,root,root,755)
