@@ -11,12 +11,12 @@ Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://linux.mks.com.pl/
 PreReq:		rc-scripts
-Requires(pre): /usr/bin/getgid
 Requires(pre): /bin/id
+Requires(pre): /usr/bin/getgid
 Requires(pre): /usr/sbin/groupadd
 Requires(pre): /usr/sbin/useradd
-Requires(postun):      /usr/sbin/userdel
 Requires(postun):      /usr/sbin/groupdel
+Requires(postun):      /usr/sbin/userdel
 Requires:	mks
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -61,14 +61,15 @@ tar xf inne/src.tar
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},/var/run/mksd}
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir},%{_includedir}} \
+	{/var/run/mksd,/etc/{rc.d/init.d,sysconfig}}
 
-install -D %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/mksd
-install -D %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/mksd
-install -D *.h $RPM_BUILD_ROOT%{_includedir}/libmksd.h
-install -D *.a $RPM_BUILD_ROOT%{_libdir}/libmksd.a
-install mksd mkschk mkschkin mksfiltr $RPM_BUILD_ROOT%{_bindir}/
-install inne/mks* $RPM_BUILD_ROOT%{_bindir}/
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/mksd
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/mksd
+install *.h $RPM_BUILD_ROOT%{_includedir}/libmksd.h
+install *.a $RPM_BUILD_ROOT%{_libdir}
+install mksd mkschk mkschkin mksfiltr $RPM_BUILD_ROOT%{_bindir}
+install inne/mks* $RPM_BUILD_ROOT%{_bindir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
