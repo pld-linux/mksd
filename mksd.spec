@@ -81,7 +81,7 @@ if [ -n "`getgid mksd`" ]; then
                 exit 1
         fi
 else
-       echo "adding group mksd GID=44."
+       echo "adding group mksd GID=44"
         /usr/sbin/groupadd -g 44 -r -f mksd
 fi
 if [ -n "`id -u mksd 2>/dev/null`" ]; then
@@ -90,10 +90,14 @@ if [ -n "`id -u mksd 2>/dev/null`" ]; then
                exit 1
        fi
 else
-       echo "Adding user mksd UID=44 and adding to amavis group (if exists)."
+       echo "adding user mksd UID=44"
        /usr/sbin/useradd -u 44 -r -d /tmp -s /bin/false -c "MKSD Anti Virus Checker" -g mksd mksd 1>&2
-       /bin/grep amavis /etc/group
-       [ $? -eq 0 ] &&	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
+       AMAVIS=$(/usr/bin/getgid amavis)
+       RESULT=$?
+       if  [ $RESULT -eq 0 ]; then
+       		/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
+	       echo "adding to amavis group GID=$AMAVIS"
+	fi	       
 fi
 
 
