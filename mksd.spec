@@ -1,21 +1,28 @@
+# TODO:
+#   - make two virus db sources providing mks-virdb-source
+#       - cron update
+#       - static db (built with package)
+#   - make cron run db udpate hourly ?
+
 Summary:	Daemon for mks-anti-virus utility for Unix
 Summary(pl):	Demon dla mks - antywirusowe narzêdzie dla Unixów
 Name:		mksd
-Version:	1.13
-Release:	1
-License:	distributable
+Version:	1.14
+Release:	4
+License:	This program will be for free till the end of year 2003 (see licencja.txt)
 Group:		Applications
-Source0:	http://download.mks.com.pl/download/linux/mksdLinux-%{version}.tgz
+Source0:	http://download.mks.com.pl/download/linux/mksdLinux-%{version}.2.tgz
+# Source0-md5:	da1277010b59c8bbce2c56f06c039653
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://linux.mks.com.pl/
 PreReq:		rc-scripts
-Requires(pre): /usr/bin/getgid
-Requires(pre): /bin/id
-Requires(pre): /usr/sbin/groupadd
-Requires(pre): /usr/sbin/useradd
-Requires(postun):      /usr/sbin/userdel
-Requires(postun):      /usr/sbin/groupdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
 Requires:	mks
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -60,44 +67,93 @@ tar xf inne/src.tar
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},/var/run/mksd}
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir},%{_includedir}} \
+	$RPM_BUILD_ROOT{/var/run/mksd,/etc/{rc.d/init.d,sysconfig}}
 
-install -D %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/mksd
-install -D %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/mksd
-install -D *.h $RPM_BUILD_ROOT%{_includedir}/libmksd.h
-install -D *.a $RPM_BUILD_ROOT%{_libdir}/libmksd.a
-install mksd mkschk mkschkin mksfiltr $RPM_BUILD_ROOT%{_bindir}/
-install inne/mks* $RPM_BUILD_ROOT%{_bindir}/
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/mksd
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/mksd
+install *.h $RPM_BUILD_ROOT%{_includedir}/libmksd.h
+install *.a $RPM_BUILD_ROOT%{_libdir}
+install mksd mkschk mkschkin mksfiltr mksscan $RPM_BUILD_ROOT%{_bindir}
+install inne/mks* $RPM_BUILD_ROOT%{_bindir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%triggerin -- amavis-ng
+AMAVIS=$(/usr/bin/getgid amavis)
+RESULT=$?
+if  [ $RESULT -eq 0 ]; then
+	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
+	echo "adding mksd to amavis group GID=$AMAVIS"
+fi
+
+%triggerin -- amavisd-new
+
+AMAVIS=$(/usr/bin/getgid amavis)
+RESULT=$?
+if  [ $RESULT -eq 0 ]; then
+	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
+	echo "adding mksd to amavis group GID=$AMAVIS"
+fi
+
+%triggerin -- amavisd
+AMAVIS=$(/usr/bin/getgid amavis)
+RESULT=$?
+if  [ $RESULT -eq 0 ]; then
+	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
+	echo "adding mksd to amavis group GID=$AMAVIS"
+fi
+
 %pre
 if [ -n "`getgid mksd`" ]; then
-        if [ "`getgid mksd`" != "44" ]; then
-                echo "Error: group mksd doesn't have gid=44. Correct this before installing mksd." 1>&2
-                exit 1
-        fi
+	if [ "`getgid mksd`" != "44" ]; then
+		echo "Error: group mksd doesn't have gid=44. Correct this before installing Mksd." 1>&2
+		exit 1
+	fi
 else
-       echo "adding group mksd GID=44."
-        /usr/sbin/groupadd -g 44 -r -f mksd
+	echo "adding group mksd GID=44"
+	/usr/sbin/groupadd -g 44 -r -f mksd
 fi
 if [ -n "`id -u mksd 2>/dev/null`" ]; then
-       if [ "`id -u mksd`" != "44" ]; then
-               echo "Error: user mksd doesn't have uid=44. Correct this before installing mksd." 1>&2
-               exit 1
-       fi
+	if [ "`id -u mksd`" != "44" ]; then
+		echo "Error: user mksd doesn't have uid=44. Correct this before installing Mksd." 1>&2
+		exit 1
+	fi
 else
-       echo "Adding user mksd UID=44."
-       /usr/sbin/useradd -u 44 -r -d /tmp -s /bin/false -c "MKSD Anti Virus Checker" -g mksd mksd 1>&2
+	echo "adding user mksd UID=44"
+	/usr/sbin/useradd -u 44 -r -d /tmp -s /bin/false -c "Mksd Anti Virus Checker" -g mksd mksd 1>&2
+	AMAVIS=$(/usr/bin/getgid amavis)
+	RESULT=$?
+	if  [ $RESULT -eq 0 ]; then
+		/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
+		echo "adding to amavis group GID=$AMAVIS"
+	fi
 fi
+
 
 %postun
 if [ "$1" = "0" ]; then
-       echo "Removing user mksd."
-       /usr/sbin/userdel mksd
-       echo "Removing group mksd."
-       /usr/sbin/groupdel mksd
+	echo "Removing user mksd."
+	/usr/sbin/userdel mksd
+	echo "Removing group mksd."
+	/usr/sbin/groupdel mksd
+fi
+
+%post
+/sbin/chkconfig --add mksd
+if [ -f /var/lock/subsys/mksd ]; then
+	/etc/rc.d/init.d/mksd restart >&2
+else
+	echo "Run \"/etc/rc.d/init.d/mksd start\" to start Mksd for Linux daemon."
+fi
+
+%preun
+if [ "$1" = "0" ];then
+	if [ -f /var/lock/subsys/mksd ]; then
+		/etc/rc.d/init.d/mksd stop >&2
+	fi
+	/sbin/chkconfig --del mksd
 fi
 
 %files
@@ -110,7 +166,7 @@ fi
 
 %files clients
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/mks[cfw]*
+%attr(755,root,root) %{_bindir}/mks[cfsw]*
 %doc inne/*
 
 %files devel
