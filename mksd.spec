@@ -102,7 +102,7 @@ fi
 %pre
 if [ -n "`getgid mksd`" ]; then
         if [ "`getgid mksd`" != "44" ]; then
-                echo "Error: group mksd doesn't have gid=44. Correct this before installing mksd." 1>&2
+                echo "Error: group mksd doesn't have gid=44. Correct this before installing Mksd." 1>&2
                 exit 1
         fi
 else
@@ -111,12 +111,12 @@ else
 fi
 if [ -n "`id -u mksd 2>/dev/null`" ]; then
        if [ "`id -u mksd`" != "44" ]; then
-               echo "Error: user mksd doesn't have uid=44. Correct this before installing mksd." 1>&2
+               echo "Error: user mksd doesn't have uid=44. Correct this before installing Mksd." 1>&2
                exit 1
        fi
 else
        echo "adding user mksd UID=44"
-       /usr/sbin/useradd -u 44 -r -d /tmp -s /bin/false -c "MKSD Anti Virus Checker" -g mksd mksd 1>&2
+       /usr/sbin/useradd -u 44 -r -d /tmp -s /bin/false -c "Mksd Anti Virus Checker" -g mksd mksd 1>&2
        AMAVIS=$(/usr/bin/getgid amavis)
        RESULT=$?
        if  [ $RESULT -eq 0 ]; then
@@ -149,7 +149,6 @@ if [ "$1" = "0" ];then
         fi
         /sbin/chkconfig --del mksd
 fi
-
 
 %files
 %defattr(644,root,root,755)
