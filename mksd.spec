@@ -2,13 +2,12 @@
 #   - make two virus db sources providing mks-virdb-source
 #       - cron update
 #       - static db (built with package)
-#   - make cron run db udpate hourly ?
 
 Summary:	Daemon for mks-anti-virus utility for Unix
 Summary(pl):	Demon dla mks - antywirusowe narzêdzie dla Unixów
 Name:		mksd
 Version:	1.15.2
-Release:	1
+Release:	2
 License:	This program will be for free till the end of year 2003 (see licencja.txt)
 Group:		Applications
 Source0:	http://download.mks.com.pl/download/linux/mksdLinux-%{version}.tgz
