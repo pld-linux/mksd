@@ -15,6 +15,7 @@ Source0:	http://download.mks.com.pl/download/linux/mksdLinux-%{version}.tgz
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://linux.mks.com.pl/
+BuildRequires:	rpmbuild(macros) >= 1.159
 PreReq:		rc-scripts
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
@@ -22,9 +23,12 @@ Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
+Requires:	/usr/sbin/usermod
 Requires:	mks
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+Provides:	group(mksd)
+Provides:	user(mksd)
 ExclusiveArch:	%{ix86}
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 MKSD Antivirus is anti-virus scanner for Unix.
@@ -89,7 +93,6 @@ if [ $RESULT -eq 0 ]; then
 fi
 
 %triggerin -- amavisd-new
-
 AMAVIS=$(/usr/bin/getgid amavis)
 RESULT=$?
 if [ $RESULT -eq 0 ]; then
@@ -106,38 +109,35 @@ if [ $RESULT -eq 0 ]; then
 fi
 
 %pre
-if [ -n "`getgid mksd`" ]; then
-	if [ "`getgid mksd`" != "44" ]; then
+if [ -n "`/usr/bin/getgid mksd`" ]; then
+	if [ "`/usr/bin/getgid mksd`" != "44" ]; then
 		echo "Error: group mksd doesn't have gid=44. Correct this before installing Mksd." 1>&2
 		exit 1
 	fi
 else
 	echo "adding group mksd GID=44"
-	/usr/sbin/groupadd -g 44 -r -f mksd
+	/usr/sbin/groupadd -g 44 mksd
 fi
-if [ -n "`id -u mksd 2>/dev/null`" ]; then
-	if [ "`id -u mksd`" != "44" ]; then
+if [ -n "`/bin/id -u mksd 2>/dev/null`" ]; then
+	if [ "`/bin/id -u mksd`" != "44" ]; then
 		echo "Error: user mksd doesn't have uid=44. Correct this before installing Mksd." 1>&2
 		exit 1
 	fi
 else
-	echo "adding user mksd UID=44"
-	/usr/sbin/useradd -u 44 -r -d /tmp -s /bin/false -c "Mksd Anti Virus Checker" -g mksd mksd 1>&2
 	AMAVIS=$(/usr/bin/getgid amavis)
-	RESULT=$?
-	if [ $RESULT -eq 0 ]; then
-		/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
-		echo "adding to amavis group GID=$AMAVIS"
+	GROUPS=
+	if [ $? -eq 0 ]; then
+		GROUPS="-G amavis"
 	fi
+	echo "adding user mksd UID=44"
+	/usr/sbin/useradd -u 44 -d /tmp -s /bin/false \
+		-c "Mksd Anti Virus Checker" -g mksd $GROUPS mksd 1>&2
 fi
-
 
 %postun
 if [ "$1" = "0" ]; then
-	echo "Removing user mksd."
-	/usr/sbin/userdel mksd
-	echo "Removing group mksd."
-	/usr/sbin/groupdel mksd
+	%userremove mksd
+	%groupremove mksd
 fi
 
 %post
