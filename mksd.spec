@@ -11,12 +11,12 @@ Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://linux.mks.com.pl/
 PreReq:		rc-scripts
-Requires(pre): /bin/id
-Requires(pre): /usr/bin/getgid
-Requires(pre): /usr/sbin/groupadd
-Requires(pre): /usr/sbin/useradd
-Requires(postun):      /usr/sbin/groupdel
-Requires(postun):      /usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
 Requires:	mks
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -101,53 +101,53 @@ fi
 
 %pre
 if [ -n "`getgid mksd`" ]; then
-        if [ "`getgid mksd`" != "44" ]; then
-                echo "Error: group mksd doesn't have gid=44. Correct this before installing Mksd." 1>&2
-                exit 1
-        fi
+	if [ "`getgid mksd`" != "44" ]; then
+		echo "Error: group mksd doesn't have gid=44. Correct this before installing Mksd." 1>&2
+		exit 1
+	fi
 else
-       echo "adding group mksd GID=44"
-        /usr/sbin/groupadd -g 44 -r -f mksd
+	echo "adding group mksd GID=44"
+	/usr/sbin/groupadd -g 44 -r -f mksd
 fi
 if [ -n "`id -u mksd 2>/dev/null`" ]; then
-       if [ "`id -u mksd`" != "44" ]; then
-               echo "Error: user mksd doesn't have uid=44. Correct this before installing Mksd." 1>&2
-               exit 1
-       fi
+	if [ "`id -u mksd`" != "44" ]; then
+		echo "Error: user mksd doesn't have uid=44. Correct this before installing Mksd." 1>&2
+		exit 1
+	fi
 else
-       echo "adding user mksd UID=44"
-       /usr/sbin/useradd -u 44 -r -d /tmp -s /bin/false -c "Mksd Anti Virus Checker" -g mksd mksd 1>&2
-       AMAVIS=$(/usr/bin/getgid amavis)
-       RESULT=$?
-       if  [ $RESULT -eq 0 ]; then
-       		/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
-	       echo "adding to amavis group GID=$AMAVIS"
-	fi	       
+	echo "adding user mksd UID=44"
+	/usr/sbin/useradd -u 44 -r -d /tmp -s /bin/false -c "Mksd Anti Virus Checker" -g mksd mksd 1>&2
+	AMAVIS=$(/usr/bin/getgid amavis)
+	RESULT=$?
+	if  [ $RESULT -eq 0 ]; then
+		/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
+		echo "adding to amavis group GID=$AMAVIS"
+	fi
 fi
 
 
 %postun
 if [ "$1" = "0" ]; then
-       echo "Removing user mksd."
-       /usr/sbin/userdel mksd
-       echo "Removing group mksd."
-       /usr/sbin/groupdel mksd
+	echo "Removing user mksd."
+	/usr/sbin/userdel mksd
+	echo "Removing group mksd."
+	/usr/sbin/groupdel mksd
 fi
 
 %post
 /sbin/chkconfig --add mksd
 if [ -f /var/lock/subsys/mksd ]; then
-        /etc/rc.d/init.d/mksd restart >&2
+	/etc/rc.d/init.d/mksd restart >&2
 else
-        echo "Run \"/etc/rc.d/init.d/mksd start\" to start Mksd for Linux daemon."
+	echo "Run \"/etc/rc.d/init.d/mksd start\" to start Mksd for Linux daemon."
 fi
 
 %preun
 if [ "$1" = "0" ];then
-        if [ -f /var/lock/subsys/mksd ]; then
-                /etc/rc.d/init.d/mksd stop >&2
-        fi
-        /sbin/chkconfig --del mksd
+	if [ -f /var/lock/subsys/mksd ]; then
+		/etc/rc.d/init.d/mksd stop >&2
+	fi
+	/sbin/chkconfig --del mksd
 fi
 
 %files
