@@ -8,7 +8,7 @@ Summary:	Daemon for mks-anti-virus utility for Unix
 Summary(pl):	Demon dla mks - antywirusowe narzêdzie dla Unixów
 Name:		mksd
 Version:	1.14
-Release:	5
+Release:	4
 License:	This program will be for free till the end of year 2003 (see licencja.txt)
 Group:		Applications
 Source0:	http://download.mks.com.pl/download/linux/mksdLinux-%{version}.2.tgz
