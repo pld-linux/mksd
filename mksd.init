@@ -25,7 +25,7 @@ case "$1" in
 	if [ ! -f /var/lock/subsys/mksd ]; then
 		msg_starting mksd
 		[ -f /var/run/mksd/mksd.pid ] && rm -f /var/run/mksd/mksd.pid
-		daemon /usr/bin/mksd $MKSD_MODE $MKSD_PROCESS
+		daemon --user mksd /usr/bin/mksd $MKSD_MODE $MKSD_PROCESS
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/mksd		
 	else
