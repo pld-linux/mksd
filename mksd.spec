@@ -27,7 +27,7 @@ Requires:	/usr/sbin/usermod
 Requires:	mks
 Provides:	group(mksd)
 Provides:	user(mksd)
-ExclusiveArch:	%{ix86}
+ExclusiveArch:	%{ix86} amd64
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -78,7 +78,17 @@ install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/mksd
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/mksd
 install *.h $RPM_BUILD_ROOT%{_includedir}/libmksd.h
 install *.a $RPM_BUILD_ROOT%{_libdir}
+%ifarch %{ix86}
 install mksd mkschk mkschkin mksfiltr mksscan $RPM_BUILD_ROOT%{_bindir}
+%endif
+%ifarch amd64
+install mksd.static $RPM_BUILD_ROOT%{_bindir}/mksd
+install mkschk $RPM_BUILD_ROOT%{_bindir}/mkschk
+install mkschkin.static $RPM_BUILD_ROOT%{_bindir}/mkschkin
+install mksfiltr.static $RPM_BUILD_ROOT%{_bindir}/mksfiltr
+install mksscan.static $RPM_BUILD_ROOT%{_bindir}/mksscan
+%endif
+
 install inne/mks* $RPM_BUILD_ROOT%{_bindir}
 
 %clean
