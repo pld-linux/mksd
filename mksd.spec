@@ -15,7 +15,7 @@ Source0:	http://download.mks.com.pl/download/linux/mksdLinux-%{version}.tgz
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://linux.mks.com.pl/
-BuildRequires:	rpmbuild(macros) >= 1.159
+BuildRequires:	rpmbuild(macros) >= 1.202
 PreReq:		rc-scripts
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
@@ -99,7 +99,7 @@ AMAVIS=$(/usr/bin/getgid amavis)
 RESULT=$?
 if [ $RESULT -eq 0 ]; then
 	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
-	echo "adding mksd to amavis group GID=$AMAVIS"
+	echo "Adding mksd to amavis group GID=$AMAVIS"
 fi
 
 %triggerin -- amavisd-new
@@ -107,7 +107,7 @@ AMAVIS=$(/usr/bin/getgid amavis)
 RESULT=$?
 if [ $RESULT -eq 0 ]; then
 	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
-	echo "adding mksd to amavis group GID=$AMAVIS"
+	echo "Adding mksd to amavis group GID=$AMAVIS"
 fi
 
 %triggerin -- amavisd
@@ -115,33 +115,18 @@ AMAVIS=$(/usr/bin/getgid amavis)
 RESULT=$?
 if [ $RESULT -eq 0 ]; then
 	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
-	echo "adding mksd to amavis group GID=$AMAVIS"
+	echo "Adding mksd to amavis group GID=$AMAVIS"
 fi
 
 %pre
-if [ -n "`/usr/bin/getgid mksd`" ]; then
-	if [ "`/usr/bin/getgid mksd`" != "44" ]; then
-		echo "Error: group mksd doesn't have gid=44. Correct this before installing Mksd." 1>&2
-		exit 1
-	fi
-else
-	echo "adding group mksd GID=44"
-	/usr/sbin/groupadd -g 44 mksd
-fi
-if [ -n "`/bin/id -u mksd 2>/dev/null`" ]; then
-	if [ "`/bin/id -u mksd`" != "44" ]; then
-		echo "Error: user mksd doesn't have uid=44. Correct this before installing Mksd." 1>&2
-		exit 1
-	fi
-else
-	GROUPS=
-	AMAVIS=$(/usr/bin/getgid amavis)
-	if [ $? -eq 0 ]; then
-		GROUPS="-G amavis"
-	fi
-	echo "adding user mksd UID=44"
-	/usr/sbin/useradd -u 44 -d /tmp -s /bin/false \
-		-c "Mksd Anti Virus Checker" -g mksd $GROUPS mksd 1>&2
+%groupadd -g 44 mksd
+%useradd -u 44 -d /tmp -s /bin/false -c "Mksd Anti Virus Checker" -g mksd mksd
+# FIXME: isn't trigger sufficent?
+AMAVIS=$(/usr/bin/getgid amavis)
+RESULT=$?
+if [ $RESULT -eq 0 ]; then
+	/usr/sbin/usermod -G amavis mksd 1>&2 > /dev/null
+	echo "Adding mksd to amavis group GID=$AMAVIS"
 fi
 
 %postun
