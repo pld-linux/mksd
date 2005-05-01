@@ -1,0 +1,1 @@
+- s/Warning/Error/ in %pre, added Requires(pre,postun)
