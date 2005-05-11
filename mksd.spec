@@ -15,7 +15,7 @@ Source0:	http://download.mks.com.pl/download/linux/mksdLinux-%{version}.tgz
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://linux.mks.com.pl/
-BuildRequires:	rpmbuild(macros) >= 1.202
+BuildRequires:	rpmbuild(macros) >= 1.213
 PreReq:		rc-scripts
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
@@ -27,7 +27,7 @@ Requires:	/usr/sbin/usermod
 Requires:	mks
 Provides:	group(mksd)
 Provides:	user(mksd)
-ExclusiveArch:	%{ix86} amd64
+ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -81,7 +81,7 @@ install *.a $RPM_BUILD_ROOT%{_libdir}
 %ifarch %{ix86}
 install mksd mkschk mkschkin mksfiltr mksscan $RPM_BUILD_ROOT%{_bindir}
 %endif
-%ifarch amd64
+%ifarch %{x8664}
 install mksd.static $RPM_BUILD_ROOT%{_bindir}/mksd
 install mkschk $RPM_BUILD_ROOT%{_bindir}/mkschk
 install mkschkin.static $RPM_BUILD_ROOT%{_bindir}/mkschkin
