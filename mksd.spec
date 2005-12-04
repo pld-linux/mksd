@@ -10,21 +10,21 @@ Version:	1.15.2
 Release:	5
 License:	It's free, but requires ads of mks.com.pl on your WWW (see licencja.txt)
 Group:		Applications
-Source0:	http://download.mks.com.pl/download/linux/mksdLinux-%{version}.tgz
+Source0:	http://download.mks.com.pl/download/linux/%{name}Linux-%{version}.tgz
 # Source0-md5:	d7094273de4df897a4e69f6c6f43244c
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://linux.mks.com.pl/
 BuildRequires:	rpmbuild(macros) >= 1.213
-PreReq:		rc-scripts
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
-Requires(postun):	/usr/sbin/groupdel
-Requires(postun):	/usr/sbin/userdel
 Requires:	/usr/sbin/usermod
 Requires:	mks
+Requires:	rc-scripts
 Provides:	group(mksd)
 Provides:	user(mksd)
 ExclusiveArch:	%{ix86} %{x8664}
@@ -156,7 +156,7 @@ fi
 %doc README LICENCJA CONOWEGO
 %attr(755,root,root) %{_bindir}/mksd
 %attr(754,root,root) /etc/rc.d/init.d/mksd
-%attr(640,root,root) %config(noreplace) %verify(not md5 size mtime) /etc/sysconfig/mksd
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mksd
 %attr(755,mksd,mksd) /var/run/mksd
 
 %files clients
