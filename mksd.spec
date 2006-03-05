@@ -15,7 +15,7 @@ Source0:	http://download.mks.com.pl/download/linux/%{name}Linux-%{version}.tgz
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://linux.mks.com.pl/
-BuildRequires:	rpmbuild(macros) >= 1.213
+BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
@@ -121,7 +121,6 @@ fi
 %pre
 %groupadd -g 44 mksd
 %useradd -u 44 -d /tmp -s /bin/false -c "Mksd Anti Virus Checker" -g mksd mksd
-# FIXME: isn't trigger sufficent?
 AMAVIS=$(/usr/bin/getgid amavis)
 RESULT=$?
 if [ $RESULT -eq 0 ]; then
@@ -137,17 +136,11 @@ fi
 
 %post
 /sbin/chkconfig --add mksd
-if [ -f /var/lock/subsys/mksd ]; then
-	/etc/rc.d/init.d/mksd restart >&2
-else
-	echo "Run \"/etc/rc.d/init.d/mksd start\" to start Mksd for Linux daemon."
-fi
+%service mksd restart "Mksd for Linux daemon"
 
 %preun
 if [ "$1" = "0" ];then
-	if [ -f /var/lock/subsys/mksd ]; then
-		/etc/rc.d/init.d/mksd stop >&2
-	fi
+	%service mksd stop
 	/sbin/chkconfig --del mksd
 fi
 
