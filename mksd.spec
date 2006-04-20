@@ -16,6 +16,7 @@ Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://linux.mks.com.pl/
 BuildRequires:	rpmbuild(macros) >= 1.268
+Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
