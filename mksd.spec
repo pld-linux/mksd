@@ -42,7 +42,7 @@ korzystaniu z mks.
 Summary:	MKSD system clients
 Summary(pl):	Aplikacje klienckie dla MKSD
 Group:		Applications
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{version}-%{release}
 
 %description clients
 MKSD system clients.
