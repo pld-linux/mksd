@@ -4,7 +4,7 @@
 #       - static db (built with package)
 
 Summary:	Daemon for mks-anti-virus utility for Unix
-Summary(pl.UTF-8):   Demon dla mks - antywirusowe narzędzie dla Uniksów
+Summary(pl.UTF-8):	Demon dla mks - antywirusowe narzędzie dla Uniksów
 Name:		mksd
 Version:	1.15.2
 Release:	8
@@ -40,7 +40,7 @@ korzystaniu z mks.
 
 %package clients
 Summary:	MKSD system clients
-Summary(pl.UTF-8):   Aplikacje klienckie dla MKSD
+Summary(pl.UTF-8):	Aplikacje klienckie dla MKSD
 Group:		Applications
 Requires:	%{name} = %{version}-%{release}
 
@@ -52,7 +52,7 @@ Aplikacje klienckie dla MKSD.
 
 %package devel
 Summary:	MKSD - development header files and libraries
-Summary(pl.UTF-8):   MKSD - pliki nagłówkowe i biblioteki dla programistów
+Summary(pl.UTF-8):	MKSD - pliki nagłówkowe i biblioteki dla programistów
 Group:		Development/Libraries
 
 %description devel
