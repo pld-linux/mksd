@@ -22,7 +22,7 @@ case "$1" in
 	if [ ! -f /var/lock/subsys/mksd ]; then
 		msg_starting mksd
 		[ -f /var/run/mksd/mksd.pid ] && rm -f /var/run/mksd/mksd.pid
-		daemon --user mksd /usr/bin/mksd $MKSD_MODE $MKSD_PROCESS
+		daemon --pidfile /var/run/mksd/mksd.pid --user mksd /usr/bin/mksd $MKSD_MODE $MKSD_PROCESS
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/mksd
 	else
@@ -32,8 +32,8 @@ case "$1" in
   stop)
 	if [ -f /var/lock/subsys/mksd ]; then
 		msg_stopping mksd
-		killproc --pidfile mksd/mksd.pid mksd
-		rm -f /var/run/mksd.pid /var/lock/subsys/mksd >/dev/null 2>&1
+		killproc --pidfile /var/run/mksd/mksd.pid mksd
+		rm -f /var/lock/subsys/mksd /var/run/mksd/mksd.pid >/dev/null 2>&1
 	else
 		msg_not_running mksd
 	fi
