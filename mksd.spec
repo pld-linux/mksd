@@ -25,7 +25,7 @@ Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires:	/usr/sbin/usermod
 Requires:	mks
-Requires:	rc-scripts
+Requires:	rc-scripts >= 0.4.1.23
 Provides:	group(mksd)
 Provides:	user(mksd)
 ExclusiveArch:	%{ix86} %{x8664}
