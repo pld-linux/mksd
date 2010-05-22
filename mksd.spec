@@ -9,7 +9,7 @@ Name:		mksd
 Version:	1.15.2
 Release:	8
 License:	It's free, but requires ads of mks.com.pl on your WWW (see licencja.txt)
-Group:		Applications
+Group:		Daemons
 Source0:	http://download.mks.com.pl/download/linux/%{name}Linux-%{version}.tgz
 # Source0-md5:	d7094273de4df897a4e69f6c6f43244c
 Source1:	%{name}.init
